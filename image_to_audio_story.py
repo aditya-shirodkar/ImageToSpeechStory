@@ -1,9 +1,9 @@
 # converts provided text to an audio story
 # 1) uses Salesforce/blip-image-captioning-base (Huggingface) to caption image
-# 2) uses google Gemini to generate story on the above caption
+# 2) uses Google Gemini to generate story on the above caption
 # 3) uses suno/bark-small (Huggingface) to create an audio file
 # 4) UI using streamlit
-# requires Huggingfacehub and google generative AI API tokens
+# requires Huggingfacehub and Google generative AI API tokens
 
 from api_keys import huggingfacehub_api_token, google_api_key
 
