@@ -46,13 +46,13 @@ def generate_story(scenario):
     Story:"""
 
     prompt = PromptTemplate(template=template, input_variables=["scenario"])
-    llm = LLMChain(
+    chain = LLMChain(
         llm=llm,
         prompt=prompt,
         verbose=True,
     )
-    story = llm.invoke(scenario)
-    print(story["text"])
+
+    story = chain.invoke(scenario)
     return story["text"]
 
 
@@ -78,11 +78,6 @@ def text_to_speech2(message):
 
     with open("output/audio.mp4", "wb") as file:
         file.write(response.content)
-
-
-# scenario = img_to_text("images/machine-learning-1.jpg")
-# story = generate_story(scenario)
-# text_to_speech(story)
 
 
 # UI on streamlit
