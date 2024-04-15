@@ -5,8 +5,6 @@
 # 4) UI using streamlit
 # requires Huggingfacehub and Google generative AI API tokens
 
-from api_keys import huggingfacehub_api_token, google_api_key
-
 from IPython.display import Audio
 from langchain.chains import LLMChain
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -15,10 +13,9 @@ import streamlit as st
 from transformers import pipeline
 
 import requests
-import os
 
-os.environ["HUGGINGFACEHUB_API_TOKEN"] = huggingfacehub_api_token
-os.environ["GOOGLE_API_KEY"] = google_api_key
+# os.environ["HUGGINGFACEHUB_API_TOKEN"] = huggingfacehub_api_token
+# os.environ["GOOGLE_API_KEY"] = google_api_key
 
 
 # image-to-text
@@ -35,7 +32,7 @@ def img_to_text(url):
 
 
 # llm
-def generate_story(scenario):
+def generate_story(scenario, google_api_key):
     llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=google_api_key)
     template = """
     You are a storyteller;
@@ -68,7 +65,7 @@ def text_to_speech(message):
 
 
 # alternatively, implementing using the Inference API
-def text_to_speech2(message):
+def text_to_speech2(message, huggingfacehub_api_token):
     API_URL = "https://api-inference.huggingface.co/models/suno/bark-small"
     headers = {"Authorization": f"Bearer {huggingfacehub_api_token}"}
     payloads = {"text_inputs": message}
@@ -86,13 +83,18 @@ def main():
     st.header("Convert an image into an audio story")
     image_file = st.file_uploader("Choose an image", type="jpg")
 
-    if image_file is not None:
+    google_api_key = st.sidebar.text_input("Input you Google generative AI API key")
+    # huggingfacehub_api_token = st.sidebar.text_input(
+    #     "Input your Hugging Face Hub API token"
+    # )
+
+    if google_api_key and image_file is not None:
         print(image_file)
         image_bytes = image_file.getvalue()
         with open(image_file.name, "wb") as file:
             file.write(image_bytes)
         scenario = img_to_text(image_file.name)
-        story = generate_story(scenario)
+        story = generate_story(scenario, google_api_key)
         text_to_speech(story)
 
         with st.expander("scenario"):

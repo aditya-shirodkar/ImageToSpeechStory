@@ -3,4 +3,3 @@ venv/
 images/
 .idea
 __pycache__/
-api_keys.py
