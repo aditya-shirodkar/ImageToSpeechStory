@@ -1,0 +1,6 @@
+google-generativeai == 0.4.1
+IPython == 8.18.1
+langchain == 0.1.15
+langchain-google-genai == 1.0.1
+streamlit == 1.33.0
+transformers == 4.39.3
