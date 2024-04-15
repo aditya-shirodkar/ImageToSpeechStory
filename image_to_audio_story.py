@@ -3,19 +3,13 @@
 # 2) uses Google Gemini to generate story on the above caption
 # 3) uses suno/bark-small (Huggingface) to create an audio file
 # 4) UI using streamlit
-# requires Huggingfacehub and Google generative AI API tokens
+# requires Google generative AI API tokens
 
-from IPython.display import Audio
 from langchain.chains import LLMChain
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 import streamlit as st
 from transformers import pipeline
-
-import requests
-
-# os.environ["HUGGINGFACEHUB_API_TOKEN"] = huggingfacehub_api_token
-# os.environ["GOOGLE_API_KEY"] = google_api_key
 
 
 # image-to-text
@@ -50,6 +44,8 @@ def generate_story(scenario, google_api_key):
     )
 
     story = chain.invoke(scenario)
+    print(story["text"])
+
     return story["text"]
 
 
@@ -57,24 +53,7 @@ def generate_story(scenario, google_api_key):
 def text_to_speech(message):
     txt_to_speech = pipeline(task="text-to-speech", model="suno/bark-small")
     speech = txt_to_speech(message)
-
-    # sound = Audio(speech["audio"], rate=speech["sampling_rate"])
-    # with open("output/audio.flac", "wb") as file:
-    #     file.write(sound.data)
     return speech
-
-
-# alternatively, implementing using the Inference API
-def text_to_speech2(message, huggingfacehub_api_token):
-    API_URL = "https://api-inference.huggingface.co/models/suno/bark-small"
-    headers = {"Authorization": f"Bearer {huggingfacehub_api_token}"}
-    payloads = {"text_inputs": message}
-
-    response = requests.post(API_URL, headers=headers, json=payloads)
-    print(response)
-
-    with open("output/audio.mp4", "wb") as file:
-        file.write(response.content)
 
 
 # UI on streamlit
