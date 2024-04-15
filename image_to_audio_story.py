@@ -60,8 +60,9 @@ def text_to_speech(message):
     print(speech)
 
     sound = Audio(speech["audio"], rate=speech["sampling_rate"])
-    with open("output/audio.flac", "wb") as file:
-        file.write(sound.data)
+    # with open("output/audio.flac", "wb") as file:
+    #     file.write(sound.data)
+    return sound
 
 
 # alternatively, implementing using the Inference API
@@ -83,10 +84,7 @@ def main():
     st.header("Convert an image into an audio story")
     image_file = st.file_uploader("Choose an image", type="jpg")
 
-    google_api_key = st.sidebar.text_input("Input you Google generative AI API key")
-    # huggingfacehub_api_token = st.sidebar.text_input(
-    #     "Input your Hugging Face Hub API token"
-    # )
+    google_api_key = st.sidebar.text_input("Input your Google generative AI API key")
 
     if google_api_key and image_file is not None:
         print(image_file)
@@ -95,14 +93,14 @@ def main():
             file.write(image_bytes)
         scenario = img_to_text(image_file.name)
         story = generate_story(scenario, google_api_key)
-        text_to_speech(story)
+        sound = text_to_speech(story)
 
         with st.expander("scenario"):
             st.write(scenario)
         with st.expander("story"):
             st.write(story)
 
-        st.audio("output/audio.flac")
+        st.audio(sound)
 
 
 if __name__ == "__main__":
