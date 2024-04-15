@@ -57,12 +57,11 @@ def generate_story(scenario, google_api_key):
 def text_to_speech(message):
     txt_to_speech = pipeline(task="text-to-speech", model="suno/bark-small")
     speech = txt_to_speech(message)
-    print(speech)
 
-    sound = Audio(speech["audio"], rate=speech["sampling_rate"])
+    # sound = Audio(speech["audio"], rate=speech["sampling_rate"])
     # with open("output/audio.flac", "wb") as file:
     #     file.write(sound.data)
-    return sound
+    return speech
 
 
 # alternatively, implementing using the Inference API
@@ -93,14 +92,14 @@ def main():
             file.write(image_bytes)
         scenario = img_to_text(image_file.name)
         story = generate_story(scenario, google_api_key)
-        sound = text_to_speech(story)
+        speech = text_to_speech(story)
 
         with st.expander("scenario"):
             st.write(scenario)
         with st.expander("story"):
             st.write(story)
 
-        st.audio(sound)
+        st.audio(data=speech["audio"], sample_rate=speech["sampling_rate"])
 
 
 if __name__ == "__main__":
